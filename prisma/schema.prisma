@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique(map: "User.email_unique")
+  name      String
+  role      String    @default("USER") // USER | ADMIN
+  status    String    @default("ACTIVE")
+  sessions  Session[]
+  mailboxes Mailbox[]
+  logs      Log[]
+}
+
+model Session {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  expirationDate DateTime
+
+  @@index([userId])
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  raw         Bytes // raw SMTP input
+  from        String
+  to          String
+  subject     String
+  body        String // body is everything parser output
+  smtpSession String? // smtp-server session object
+  text        String?
+  html        String?
+  mailbox     Mailbox  @relation(fields: [mailboxId], references: [id], onDelete: Cascade)
+  mailboxId   String
+
+  @@index([mailboxId])
+}
+
+model Mailbox {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  name      String
+  username  String    @unique
+  password  String
+  messages  Message[]
+  users     User[]
+  ownerId   String
+  type      String    @default("BASIC")
+  status    String    @default("ONLINE")
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  tag       String?
+  message   String
+}

@@ -1,0 +1,54 @@
+# fly.toml file generated for tarkserv on 2023-01-17T17:27:38+02:00
+
+app = "tarkserv"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+  DATABASE_URL = "file:/data/sqlite.db"
+  PORT = "8080"
+  SMTP_HOST_PORT = "587"
+  SMTP_LISTEN_PORT = "587"
+
+[experimental]
+  cmd = "start_with_migrations.sh"
+  entrypoint = "sh"
+
+[[mounts]]
+  destination = "/data"
+  source = "data"
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+# SMTP ports. Must match SMTP_LISTEN_PORT/SMTP_HOST_PORT
+[[services]]
+  internal_port = 587
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 587
