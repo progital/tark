@@ -17,6 +17,10 @@ Inspired heavily by [mailtrap.io](https://mailtrap.io), Tark is a simple version
 - Simple login and sign on via magic links.
 - Accessibility is a priority, with the app following WCAG guidelines and tested for issues with `axe-core`.
 
+### Live Demo
+
+You can check it out at [https://tarkserv.fly.dev/](https://tarkserv.fly.dev/)
+
 ### Tech stack
 
 - Deploys and runs on fly.io.
