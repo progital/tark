@@ -51,7 +51,7 @@ If you want to run the app locally you need to set up Prisma
 npx prisma db push
 ```
 
-Everything is set up automatically when deploying to fly.io.
+Database is set up automatically when deploying to fly.io.
 
 ### 2. Signing up for email service
 
@@ -82,7 +82,7 @@ It will find the existing `fly.toml` and offer to use it
 
 > An existing fly.toml file was found for app tarkserv
 
-Agree to it. Choose an app name and a region for deployment. Do NOT create a Postgres database or Redis database. Do NOT deploy yet because we need to set the environment variables.
+Agree to it. Choose an app name and a region for deployment. Do NOT create a Postgres database or Redis database. Do NOT deploy yet because we need to set environment variables.
 
 > ? Would you like to set up a Postgresql database now? No   
 > ? Would you like to set up an Upstash Redis database now? No   
