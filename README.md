@@ -84,10 +84,11 @@ It will find the existing `fly.toml` and offer to use it
 
 Agree to it. Choose an app name and a region for deployment. Do NOT create a Postgres database or Redis database. Do NOT deploy yet because we need to set the environment variables.
 
-> ? Would you like to set up a Postgresql database now? No
-> ? Would you like to set up an Upstash Redis database now? No
-> ? Would you like to deploy now? No
-> Your app is ready! Deploy with `flyctl deploy`
+> ? Would you like to set up a Postgresql database now? No   
+> ? Would you like to set up an Upstash Redis database now? No   
+> ? Would you like to deploy now? No   
+>
+> Your app is ready! Deploy with `flyctl deploy`   
 
 #### Allocate an IP address
 
