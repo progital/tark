@@ -26,20 +26,33 @@ Inspired heavily by [mailtrap.io](mailtrap.io), Tark is a simple version that ca
 
 ## How to use
 
-- Sign up for fly.io
-- Clone this repo, run `npm install`
-- Sign up for an email service of your choice, like Sendinblue or Postmark
-- Update the environment variables in your `.env` file if running locally or follow the [docs](https://fly.io/docs/reference/runtime-environment/) for how to update them for deploying on fly.io
-- Deploy the app
+1. Clone this repo, run `npm install`
+    - (local dev only) Set up Prisma database
+2. Sign up for an email service of your choice, like Sendinblue or Postmark
+3. Sign up for fly.io
+    - Configure the fly.io app
+4. Update the environment variables in your `.env` file if running locally or follow the [docs](https://fly.io/docs/reference/runtime-environment/) for how to update them for deploying on fly.io
+5. Deploy the app
+
 - Login to your server, make some inboxes, and start using them in your dev work.
 
 I'll walk you through each step in more detail below.
 
-### Signing up for fly.io
+### 1. Clone this repo
 
-[Install flyctl](https://fly.io/docs/hands-on/install-flyctl/) and [sign up](https://fly.io/docs/hands-on/sign-up/). Note that they require a [credit card](https://fly.io/docs/about/credit-cards/) (like most cloud providers) but their [free allowance](https://fly.io/docs/about/pricing/) is more than enough for our needs.
+This step is self-explanatory.
 
-### Email service
+#### Prisma database
+
+If you want to run the app locally you need to set up Prisma
+
+```
+npx prisma db push
+```
+
+Everything is set up automatically when deploying to fly.io.
+
+### 2. Signing up for email service
 
 To send our own transactional emails we need a dedicated emailing service. Even though we are running our own SMTP server, we can't use it for sending emails because of too much hassle with setting it up and [deliverability issues](https://twitter.com/kentcdodds/status/1615147013292843008). I've used [Sendinblue](https://www.sendinblue.com/) and [Postmark](https://postmarkapp.com/), but there are lots of other options like Sendgrid, Mailgun, Amazon SES.
 
@@ -52,11 +65,53 @@ TRANSACT_SMTP_USER="<your-user-name>"
 TRANSACT_SMTP_PASS="<your-password>"
 ```
 
-### Environment variables
+### 3. Signing up for fly.io
+
+[Install flyctl](https://fly.io/docs/hands-on/install-flyctl/) and [sign up](https://fly.io/docs/hands-on/sign-up/). Note that they require a [credit card](https://fly.io/docs/about/credit-cards/) (like most cloud providers) but their [free allowance](https://fly.io/docs/about/pricing/) is more than enough for our needs.
+
+#### Configure the fly.io app
+
+Run `fly launch` to create and configure our app.
+
+```
+fly launch
+```
+
+It will find the existing `fly.toml` and offer to use it
+
+> An existing fly.toml file was found for app tarkserv
+
+Agree to it. Choose an app name and a region for deployment. Do NOT create a Postgres database or Redis database. Do NOT deploy yet because we need to set the environment variables.
+
+> ? Would you like to set up a Postgresql database now? No
+> ? Would you like to set up an Upstash Redis database now? No
+> ? Would you like to deploy now? No
+> Your app is ready! Deploy with `flyctl deploy`
+
+#### Allocate an IP address
+
+IP address is allocated automatically when you deploy but the app does not work with the shared IP that is assigned by default.
+Just run this command.
+
+```
+fly ips allocate-v4
+```
+
+The first assigned IP address is [free](https://fly.io/docs/about/pricing/).
+
+#### Create a data volume
+
+Create a data volume for the db in the same region you deployed the app to. 1GB should be enough. 
+
+```
+fly volumes create data --region <region> --size 1
+```
+
+### 4. Environment variables
 
 `.env` is used for local development only. When deploying to fly.io you'll need to set the variables in the `fly.toml` file and use the fly CLI for secrets: [docs](https://fly.io/docs/reference/runtime-environment/).
 
-Secrets
+Set the following secrets with the [CLI](https://fly.io/docs/reference/secrets/)
 
 ```
 MAGIC_LINK_SECRET="<any-long-random-string>"
@@ -65,7 +120,7 @@ TRANSACT_SMTP_USER="<your-user-name>"
 TRANSACT_SMTP_PASS="<your-password>"
 ```
 
-`fly.toml` variables
+Update the `fly.toml` variables
 
 ```
 [env]
@@ -79,32 +134,19 @@ TRANSACT_FROM="yourname <youremail@domain.com>"
 
 `TRANSACT_FROM` is the "from" email address in our transactional emails. Some services only accept verified emails in the "from" field, so make sure it's valid.
 
-### Deploying to Fly.io
+### 5. Deploying to Fly.io
 
-`flyctl launch`
-
-#### IP Addresses
-
-The app does not work with the shared IP assigned by default.
+Now everything is ready and we can deploy to fly.io
 
 ```
-Configuration errors in fly.toml:
-
-    ✘ base: Services defined at indexes: 1 require a dedicated IP address. You currently have a shared IPv4 assigned to your app (`fly ips list`). Release the shared IP (`fly ips release <shared ip>`) and/or allocate only dedicated IPs before deploying (`fly ips allocate-v4` and/or `fly ips allocate-v6`). Affected services:
-  [1] tcp/25 => 25
-
-Error App configuration is not valid
+flyctl deploy
 ```
 
-It is solved by doing exactly what the error says: [docs](https://fly.io/docs/reference/services/).
+(if you want to run the app locally it's the usual `npm run dev`)
 
-```
-fly ips list
-fly ips release <id-addr>
-fly ips allocate-v4
-```
+### How to use the app
 
-The first assigned IP address is [free](https://fly.io/docs/about/pricing/).
+You log in, create a new mailbox, then use the mailbox details in your dev work.
 
 ### Support
 

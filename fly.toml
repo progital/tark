@@ -1,4 +1,4 @@
-# fly.toml file generated for tarkserv on 2023-01-17T17:27:38+02:00
+# fly.toml file generated for tarkserv on 2023-02-14T02:42:01+02:00
 
 app = "tarkserv"
 kill_signal = "SIGINT"
@@ -8,8 +8,10 @@ processes = []
 [env]
   DATABASE_URL = "file:/data/sqlite.db"
   PORT = "8080"
-  SMTP_HOST_PORT = "587"
   SMTP_LISTEN_PORT = "587"
+  TRANSACT_FROM = "tarkserv <dev@progital.io>"
+  TRANSACT_SMTP_HOST = "smtp-relay.sendinblue.com"
+  TRANSACT_SMTP_PORT = "587"
 
 [experimental]
   cmd = "start_with_migrations.sh"
@@ -45,7 +47,6 @@ processes = []
     restart_limit = 0
     timeout = "2s"
 
-# SMTP ports. Must match SMTP_LISTEN_PORT/SMTP_HOST_PORT
 [[services]]
   internal_port = 587
   protocol = "tcp"
