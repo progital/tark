@@ -9,7 +9,7 @@ processes = []
   DATABASE_URL = "file:/data/sqlite.db"
   PORT = "8080"
   SMTP_LISTEN_PORT = "587"
-  TRANSACT_FROM = "tarkserv <dev@progital.io>"
+  TRANSACT_FROM = "tarkserv <tark@progital.io>"
   TRANSACT_SMTP_HOST = "smtp-relay.sendinblue.com"
   TRANSACT_SMTP_PORT = "587"
 

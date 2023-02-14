@@ -4,7 +4,11 @@ import { useActionData, useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 import { requireAdmin } from '~/lib/auth';
 import { getUserMailboxes } from '~/lib/db-actions';
-import { sendmailTestWithAuth } from '~/lib/test-mail/sendmailTest.server';
+import {
+  sendmailTest,
+  sendmailTestWithAuth,
+} from '~/lib/test-mail/sendmailTest.server';
+import { getErrorMessage } from '~/lib/utils';
 import { TestMailView } from '~/mui/page/TestMail';
 
 const testEmailSchema = z.object({
@@ -48,6 +52,25 @@ export const action = async ({ request }: ActionArgs) => {
   if (mailboxName === 'wrong-password') {
     password = wrongPassword;
     username = mailboxes?.[0]?.username ?? wrongUsername;
+  }
+
+  if (mailboxName === 'env-mailbox') {
+    try {
+      const result = await sendmailTest({
+        to,
+        from,
+        subject: subject,
+        text: email,
+        html,
+      });
+      if (result === false) {
+        throw new Error('env-mailbox error');
+      }
+      return null;
+    } catch (err) {
+      console.error('[test-mail] env-mailbox error', err);
+      return json({ error: getErrorMessage(err, 'Invalid env mailbox') });
+    }
   }
 
   if (!username || !password) {

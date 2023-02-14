@@ -1,5 +1,4 @@
 import {
-  Alert,
   FormControl,
   InputLabel,
   MenuItem,
@@ -30,28 +29,26 @@ export const TestMailView = ({ mailboxes, email, error }: MailboxesProps) => {
       <fetcher.Form method="post">
         <input type="hidden" name="from" value={email} />
         <Stack spacing={3}>
-          {mailboxes.length ? (
-            <FormControl>
-              <InputLabel htmlFor={selectMailboxId}>Use mailbox</InputLabel>
-              <Select
-                id={selectMailboxId}
-                label="Use mailbox"
-                name="mailbox"
-                defaultValue={mailboxes[0].username}
-                required
-              >
-                <MenuItem value="no-mailbox">Wrong Mailbox</MenuItem>
-                <MenuItem value="wrong-password">Wrong Password</MenuItem>
-                {mailboxes.map((item) => (
-                  <MenuItem key={item.id} value={item.username}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ) : (
-            <Alert severity="error">need to create a mailbox first</Alert>
-          )}
+          <FormControl>
+            <InputLabel htmlFor={selectMailboxId}>Use mailbox</InputLabel>
+            <Select
+              id={selectMailboxId}
+              label="Use mailbox"
+              name="mailbox"
+              defaultValue={mailboxes?.[0]?.username ?? ''}
+              required
+            >
+              <MenuItem value="no-mailbox">Wrong Mailbox</MenuItem>
+              <MenuItem value="wrong-password">Wrong Password</MenuItem>
+              <MenuItem value="env-mailbox">ENV settings</MenuItem>
+              {mailboxes.map((item) => (
+                <MenuItem key={item.id} value={item.username}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <TextField
             label="To"
             name="to"

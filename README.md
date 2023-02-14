@@ -6,11 +6,11 @@ Tark is a "catch-all" SMTP server and a testing tool used in development that ca
 
 This tool is indispensable for a project with users and transactional emails. If you've never used a "catch-all" SMTP server in development - you are missing out. And it's very easy to use - just swap your real SMTP server credentials with the testing ones and all outgoing emails will be "trapped" and viewable via the web interface.
 
-Inspired heavily by [mailtrap.io](mailtrap.io), Tark is a simple version that can be hosted and run for free for personal use. It supports sharing inboxes with multiple users (something that mailtrap.io only has on paid plans)
+Inspired heavily by [mailtrap.io](https://mailtrap.io), Tark is a simple version that can be hosted and run for free for personal use. It supports sharing inboxes with multiple users (something that mailtrap.io only has on paid plans)
 
 ## Features
 
-- A "catch-all" SMTP server that can be deployed on [fly.io](fly.io)
+- A "catch-all" SMTP server that can be deployed on [fly.io](https://fly.io)
 - Free to deploy and run thanks to fly.io very generous free tier.
 - A web interface for viewing and debugging emails, including the source code, plain text and HTML content, SMTP server session details, raw SMTP message and headers. Attachments is work in progress.
 - Made with dev teams in mind. Inboxes have access control and can be shared with other users. Invite new users in the app.
@@ -124,15 +124,18 @@ Update the `fly.toml` variables
 
 ```
 [env]
-DATABASE_URL = "file:/data/sqlite.db"
-PORT = "8080"
-SMTP_LISTEN_PORT = "587"
 TRANSACT_SMTP_HOST="<smtp-server>"
 TRANSACT_SMTP_PORT="<server-port>"
 TRANSACT_FROM="yourname <youremail@domain.com>"
+# no need to change the lines below
+DATABASE_URL = "file:/data/sqlite.db"
+PORT = "8080"
+SMTP_LISTEN_PORT = "587"
 ```
 
 `TRANSACT_FROM` is the "from" email address in our transactional emails. Some services only accept verified emails in the "from" field, so make sure it's valid.
+
+If you want to change `SMTP_LISTEN_PORT` or `PORT` you also need to update the `[[services]]` section in `fly.toml` accordingly.
 
 ### 5. Deploying to Fly.io
 
@@ -142,11 +145,13 @@ Now everything is ready and we can deploy to fly.io
 flyctl deploy
 ```
 
-(if you want to run the app locally it's the usual `npm run dev`)
+(the usual `npm run dev` runs the app locally)
 
 ### How to use the app
 
 You log in, create a new mailbox, then use the mailbox details in your dev work.
+
+![image](https://user-images.githubusercontent.com/50555842/218769228-0a644489-a3e0-42f1-a720-ef7bc23dc760.png)
 
 ### Support
 

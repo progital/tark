@@ -66,7 +66,7 @@ async function sendmail(args: {
   const transporter = getTransporter();
   if (!transporter) {
     // silently fails
-    return;
+    return false;
   }
 
   // const { from, to, subject, text, html } = args;
@@ -104,7 +104,7 @@ async function sendmailWithAuth(
     SMTP_PORT = Number(getRequiredEnvVariable('SMTP_HOST_PORT'));
   } catch (e) {
     // silently fails
-    return;
+    return false;
   }
 
   const transporterWithAuth = nodemailer.createTransport({
