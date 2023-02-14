@@ -19,7 +19,7 @@ Inspired heavily by [mailtrap.io](https://mailtrap.io), Tark is a simple version
 
 ### Live Demo
 
-You can check it out at [https://tarkserv.fly.dev/](https://tarkserv.fly.dev/)
+You can check it out at [https://tarkserv.fly.dev](https://tarkserv.fly.dev)
 
 ### Tech stack
 
@@ -37,10 +37,7 @@ You can check it out at [https://tarkserv.fly.dev/](https://tarkserv.fly.dev/)
     - Configure the fly.io app
 4. Update the environment variables in your `.env` file if running locally or follow the [docs](https://fly.io/docs/reference/runtime-environment/) for how to update them for deploying on fly.io
 5. Deploy the app
-
-- Login to your server, make some inboxes, and start using them in your dev work.
-
-I'll walk you through each step in more detail below.
+6. Use the app: login, create some inboxes, and start using them in your dev work.
 
 ### 1. Clone this repo
 
@@ -151,9 +148,9 @@ flyctl deploy
 
 (the usual `npm run dev` runs the app locally)
 
-### How to use the app
+### 6. Using the app
 
-You log in, create a new mailbox, then use the mailbox details in your dev work.
+Log in, create a new mailbox, then use the mailbox details in your dev work.
 
 ![image](https://user-images.githubusercontent.com/50555842/218769228-0a644489-a3e0-42f1-a720-ef7bc23dc760.png)
 
