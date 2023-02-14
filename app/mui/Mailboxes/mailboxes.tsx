@@ -23,6 +23,7 @@ import { IconButtonLink, Link } from '~/mui/components/LinkStyled';
 import { ListActions } from '~/mui/components/ListActions';
 import { LoadingButton } from '~/mui/components/LoadingButton';
 import { BasicCard } from '~/mui/DashboardLayout';
+import { useMobile } from '~/mui/hooks/useMobile';
 import { iconButtonStyle } from '~/mui/styles';
 import type { MailboxesLoaderType } from '~/types/loader';
 
@@ -124,6 +125,8 @@ const CreateNewMailbox = () => {
 };
 
 export const Mailboxes = ({ mailboxes, userId }: MailboxesProps) => {
+  const isMobile = useMobile();
+
   return (
     <BasicCard
       headerProps={{
@@ -147,6 +150,18 @@ export const Mailboxes = ({ mailboxes, userId }: MailboxesProps) => {
                       isOwner={item.ownerId === userId}
                     />
                   }
+                  sx={(theme) => ({
+                    [theme.breakpoints.down('md')]: {
+                      flexDirection: 'column',
+                      pr: 2,
+                      alignItems: 'flex-start',
+                      '.MuiListItemSecondaryAction-root': {
+                        position: 'initial',
+                        transform: 'none',
+                        alignSelf: 'flex-end',
+                      },
+                    },
+                  })}
                 >
                   <ListItemText
                     primary={
@@ -158,7 +173,15 @@ export const Mailboxes = ({ mailboxes, userId }: MailboxesProps) => {
                       <>
                         {`messages: ${item._count.messages}`}
                         <br />
-                        {`username: ${item.username}, password: ${item.password}`}
+                        {isMobile ? (
+                          <>
+                            username: {item.username}
+                            <br />
+                            password: {item.password}
+                          </>
+                        ) : (
+                          `username: ${item.username}, password: ${item.password}`
+                        )}
                       </>
                     }
                   />
